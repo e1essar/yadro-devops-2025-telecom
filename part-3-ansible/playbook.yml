@@ -8,7 +8,7 @@
 
   tasks:
 
-    - name: Install Docker using this (maybe default installing)
+    - name: Install Docker using official script
       shell: curl -fsSL https://get.docker.com | sh
 
     - name: Verify Docker is installed
