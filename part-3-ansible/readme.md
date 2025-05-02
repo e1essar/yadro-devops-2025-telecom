@@ -11,7 +11,7 @@
 
 ## Тестирование
 ```
-ubuntu@DESKTOP-5K1CCU6:/mnt/c/Users/Igor/Desktop/TEST/yadro-devops-telecom/part-3-ansible$ ansible-playbook -i inventory --ask-become-pass playbook.yml
+$ ansible-playbook -i inventory --ask-become-pass playbook.yml
 BECOME password:
 
 PLAY [Install Docker And Start Script In Container] ********************************************************************
