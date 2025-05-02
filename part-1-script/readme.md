@@ -1,0 +1,26 @@
+# Скрипт
+
+## Цель
+Требуется разработать скрипт который выполняет 5 разных НТТР-запросов к сервису https://httpstat.us и обрабатывает ответы следующим образом:
+- При получении статус-кодов 1хх, 2xx, Зхх - логировать содержимое ответа (как минимум статус-код и тело ответа)
+- При получении статус-кодов 4хх и 5хх - генерировать исключительную ситуацию (exception).
+- Результат скрипта необходимо логировать в консоль
+
+## Тестирование
+Можно вызвать ./httpstat_script.py со вторым аргументом, который будет представлять собой код, который мы хотим получить
+```
+./httpstat_script.py 200
+
+[2025-05-02 22:27:24,319] - INFO - URL: https://httpstat.us/200 | Status: 200 | Body: 200 OK
+```
+
+Можно вызвать ./httpstat_script.py без аргументов, тогда скрипт отправит запросы по кодам 101, 200, 300, 404, 500
+```
+./httpstat_script.py
+
+[2025-05-02 22:18:55,256] - INFO - URL: https://httpstat.us/101 | Status: 101 | Body: 
+[2025-05-02 22:18:56,723] - INFO - URL: https://httpstat.us/200 | Status: 200 | Body: 200 OK
+[2025-05-02 22:18:58,138] - INFO - URL: https://httpstat.us/300 | Status: 300 | Body: 300 Multiple Choices
+[2025-05-02 22:18:59,690] - ERROR - Exception error https://httpstat.us/404: 404 Client Error: Not Found for url: https://httpstat.us/404
+[2025-05-02 22:19:01,144] - ERROR - Exception error https://httpstat.us/500: 500 Server Error: Internal Server Error for url: https://httpstat.us/500
+```
