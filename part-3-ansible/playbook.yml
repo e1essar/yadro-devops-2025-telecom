@@ -1,0 +1,68 @@
+- name: Install Docker And Start Script In Container
+  hosts: local
+  become: true
+  vars:
+    docker_image_name: httpstat
+    container_name: httpstat-test
+    app_dir: "{{ playbook_dir }}/app"
+
+  tasks:
+
+    - name: Install Docker using this (maybe default installing)
+      shell: curl -fsSL https://get.docker.com | sh
+      args:
+        warn: false
+
+    - name: Verify Docker is installed
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Fail if Docker version command failed
+      fail:
+        msg: "Docker installation failed or docker binary not found."
+      when: docker_version.rc != 0
+
+    - name: Display installed Docker version
+      debug:
+        msg: "{{ docker_version.stdout }}"
+
+    - name: Add user to docker group
+      user:
+        name: "{{ lookup('env','USER') }}"
+        groups: docker
+        append: true
+
+    - name: Ensure Docker service is started
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Build Docker image
+      shell: docker build -t {{ docker_image_name }} .
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Remove existing container if exists
+      shell: docker rm -f {{ container_name }}
+      ignore_errors: true
+
+    - name: Run Docker container
+      shell: docker run --name {{ container_name }} {{ docker_image_name }}
+      register: container_run
+      ignore_errors: true
+
+    - name: Fail if container exited with error
+      fail:
+        msg: "Container exited 0"
+      when: container_run.rc != 0
+
+    - name: Show docker logs
+      shell: docker logs {{ container_name }}
+      register: container_logs
+      changed_when: false
+
+    - name: Print logs to console
+      debug:
+        msg: "{{ container_logs.stdout }}"
