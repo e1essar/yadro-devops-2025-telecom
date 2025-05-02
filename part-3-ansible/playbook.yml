@@ -10,8 +10,6 @@
 
     - name: Install Docker using this (maybe default installing)
       shell: curl -fsSL https://get.docker.com | sh
-      args:
-        warn: false
 
     - name: Verify Docker is installed
       command: docker --version
@@ -49,9 +47,8 @@
       ignore_errors: true
 
     - name: Run Docker container
-      shell: docker run --name {{ container_name }} {{ docker_image_name }}
+      shell: docker run -it --name {{ container_name }} {{ docker_image_name }}
       register: container_run
-      ignore_errors: true
 
     - name: Fail if container exited with error
       fail:
